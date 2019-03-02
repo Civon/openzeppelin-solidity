@@ -1,3 +1,4 @@
+//!  Warning: The Compiled Contract might be susceptible to ExpExponentCleanup (medium/high-severity), EventStructWrongData (very low-severity) SolidityCompiler Bugs.
 pragma solidity ^0.4.24;
 
 // ----------------------------------------------------------------------------
