@@ -27,7 +27,7 @@ contract ERC721 {
     function takeOwnership(uint256 _tokenId) public;
 }
 
-pragma solidity ^0.4.18;
+// pragma solidity ^0.4.18;
 
 /**
  * @title SafeMath
@@ -115,9 +115,9 @@ contract Ownable {
 
 }
 
+import "./openzeppelin-solidity/contracts/introspection/ERC165.sol";
 
-
-contract animalMain is  ERC721,Ownable {
+contract animalMain is  ERC721,Ownable,ERC165 {
 
     using SafeMath for uint256;
 
@@ -215,7 +215,7 @@ contract animalMain is  ERC721,Ownable {
         emit Take(msg.sender, owner, _tokenId);
     }
     
-    function createAnimal() public {
+    function createAnimal() public payable {
 
         bytes32 dna;
         uint star;
@@ -224,7 +224,10 @@ contract animalMain is  ERC721,Ownable {
         //TODO 
         //使用亂數來產生DNA, 星級, 動物種類
         //動手玩創意，可以限制每次建立動物需要花費多少ETH
-        
+        dna = bytes32(keccak256(block.number, msg.sender, "its a stupid random method"));
+        star = uint8(keccak256(block.number, msg.sender, "its a stupid random method"));
+        roletype = uint256((keccak256(block.number, msg.sender, "its a stupid random method"))).div(4).add(1);
+        require(msg.value >= 0.1 ether);
             
         uint id = animals.push(animal(dna, uint8(star), uint8(roletype))) - 1;
         animalToOwner[id] = msg.sender;
@@ -232,7 +235,13 @@ contract animalMain is  ERC721,Ownable {
 
     }
     
+// ERC165 DEMO
+    bytes4 private constant _INTERFACE_ID_ERC721 = 
+        bytes4(keccak256("his all methods in ERC721 (I think its not a whole protocal, could communicate with other ERC165)"));
+    
+    constructor() {
+        _registerInterface(_INTERFACE_ID_ERC721);
+    }
 }
 
-// TODO
-interface ERC165 {}
+
